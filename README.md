@@ -178,6 +178,23 @@ cd /opt/ZHS
 docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d --build
 ```
 
+仓库也提供了对应的 `Makefile` 目标：
+
+```bash
+make compose-up
+make compose-up-prebuilt
+make compose-up-prebuilt-classic
+make compose-ps
+make compose-logs-prebuilt
+make compose-down-prebuilt
+```
+
+其中：
+
+- `make compose-up`：标准 Compose 构建
+- `make compose-up-prebuilt`：使用本地 `web-demo/dist` 构建前端运行时镜像
+- `make compose-up-prebuilt-classic`：在部分机器上可绕开 BuildKit 元数据拉取卡顿
+
 默认暴露：
 
 - 前端：`http://127.0.0.1:8080`
