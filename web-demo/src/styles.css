@@ -1,0 +1,30 @@
+:root {
+  font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  color: #132238;
+  background:
+    radial-gradient(circle at top left, rgba(10, 132, 255, 0.14), transparent 24%),
+    radial-gradient(circle at top right, rgba(20, 184, 166, 0.14), transparent 28%),
+    linear-gradient(180deg, #f5f8fc 0%, #eef3f8 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  color: #132238;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
