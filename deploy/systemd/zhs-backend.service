@@ -1,17 +1,28 @@
 # Replace User/Group and WorkingDirectory paths before installing.
 [Unit]
 Description=ZHS FastAPI Backend
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=zhs
 Group=zhs
 WorkingDirectory=/opt/ZHS/web-demo/backend
+EnvironmentFile=-/etc/zhs/zhs-backend.env
 Environment="PYTHONUNBUFFERED=1"
-ExecStart=/opt/ZHS/.venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8000
+ExecStart=/opt/ZHS/.venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=*
 Restart=always
 RestartSec=3
+UMask=027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/ZHS/logs /opt/ZHS/web-demo/backend/runtime
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=true
+MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target

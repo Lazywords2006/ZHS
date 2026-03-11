@@ -73,6 +73,19 @@ EOF
 
 sudo -u "${DEPLOY_USER}" bash -lc "cd '${INSTALL_DIR}/web-demo' && npm ci && npm run build"
 
+mkdir -p /etc/zhs
+if [[ "${DOMAIN}" == "_" ]]; then
+  cat > /etc/zhs/zhs-backend.env <<EOF
+PYTHONUNBUFFERED=1
+CORS_ALLOW_ORIGINS=http://127.0.0.1:5173,http://localhost:5173
+EOF
+else
+  cat > /etc/zhs/zhs-backend.env <<EOF
+PYTHONUNBUFFERED=1
+CORS_ALLOW_ORIGINS=http://${DOMAIN},https://${DOMAIN}
+EOF
+fi
+
 sed \
   -e "s|User=zhs|User=${DEPLOY_USER}|" \
   -e "s|Group=zhs|Group=${DEPLOY_GROUP}|" \
@@ -103,3 +116,4 @@ echo "Deployment complete."
 echo "Backend service: systemctl status zhs-backend.service"
 echo "Frontend root: ${INSTALL_DIR}/web-demo/dist"
 echo "Runtime data: ${INSTALL_DIR}/web-demo/backend/runtime"
+echo "Backend env file: /etc/zhs/zhs-backend.env"

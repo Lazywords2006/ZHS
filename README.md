@@ -118,7 +118,9 @@ python main.py -c <course_id> -v <video_id>
 - `web-demo/nginx.conf`
 - `deploy/install.sh`
 - `deploy/systemd/zhs-backend.service`
+- `deploy/systemd/zhs-backend.env.example`
 - `deploy/nginx/zhs.conf`
+- `deploy/nginx/zhs.ssl.conf`
 - `Makefile`
 
 ### 一键安装脚本
@@ -136,6 +138,7 @@ sudo DOMAIN=your-domain.example.com DEPLOY_USER=$(whoami) bash deploy/install.sh
 - 同步项目到目标目录
 - 创建虚拟环境并安装依赖
 - 构建前端
+- 生成 `/etc/zhs/zhs-backend.env`
 - 安装 `systemd` 服务
 - 写入并启用 Nginx 配置
 
@@ -295,6 +298,7 @@ sudo systemctl reload nginx
 ```
 
 如需 HTTPS，建议再接入 `certbot` 或你现有的反向代理。
+仓库里也附带了一份可直接改域名和证书路径的模板：`deploy/nginx/zhs.ssl.conf`。
 
 ## 运行时数据
 
@@ -339,6 +343,14 @@ make build-frontend
 make compose-up
 make compose-logs
 ```
+
+## 生产环境建议
+
+- 使用独立部署用户，不要直接用 root 跑后端服务
+- 保留 `/etc/zhs/zhs-backend.env` 作为后端环境变量入口
+- 优先走 HTTPS，至少在公网环境不要长期裸露 HTTP
+- 通过 `curl http://127.0.0.1:8000/api/healthz` 和 `curl http://127.0.0.1/healthz` 做存活检查
+- 如果使用 Docker，建议接入外部反向代理或云负载均衡，而不是直接把 8080 暴露到公网
 
 ## 开发说明
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import threading
 import time
@@ -34,6 +35,13 @@ LOGIN_FILE = RUNTIME_DIR / "login_data.json"
 POLL_INTERVAL_SECONDS = 1.5
 VERIFICATION_REQUIRED_STATUS = "verification_required"
 VERIFICATION_REQUIRED_MESSAGE = "检测到智慧树要求人工验证，请先在浏览器或官方客户端完成验证后再重试。"
+
+
+def parse_csv_env(name: str, default: list[str]) -> list[str]:
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        return default
+    return [item.strip() for item in raw.split(",") if item.strip()]
 
 
 def default_account_record(account_id: str, name: str) -> dict[str, Any]:
@@ -832,7 +840,10 @@ run_manager = RunManager(store)
 app = FastAPI(title="fuckZHS web-demo backend", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=parse_csv_env(
+        "CORS_ALLOW_ORIGINS",
+        ["http://127.0.0.1:5173", "http://localhost:5173"],
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
