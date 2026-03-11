@@ -845,6 +845,15 @@ def restore_sessions_on_startup() -> None:
     thread.start()
 
 
+@app.get("/api/healthz")
+def healthz() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "accounts": len(store.list_accounts()),
+        "time": int(time.time()),
+    }
+
+
 @app.get("/api/accounts")
 def get_accounts() -> list[dict[str, Any]]:
     return store.list_accounts()

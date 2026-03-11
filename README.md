@@ -116,8 +116,39 @@ python main.py -c <course_id> -v <video_id>
 - `web-demo/backend/Dockerfile`
 - `web-demo/Dockerfile`
 - `web-demo/nginx.conf`
+- `deploy/install.sh`
 - `deploy/systemd/zhs-backend.service`
 - `deploy/nginx/zhs.conf`
+- `Makefile`
+
+### 一键安装脚本
+
+如果你使用的是 Debian/Ubuntu 系 Linux，可以直接用仓库内脚本完成原生部署：
+
+```bash
+cd /opt/ZHS
+sudo DOMAIN=your-domain.example.com DEPLOY_USER=$(whoami) bash deploy/install.sh
+```
+
+脚本会自动完成：
+
+- 安装 Python、Node.js、Nginx、rsync
+- 同步项目到目标目录
+- 创建虚拟环境并安装依赖
+- 构建前端
+- 安装 `systemd` 服务
+- 写入并启用 Nginx 配置
+
+如果你希望用其他路径或端口，可以覆盖这些环境变量：
+
+```bash
+sudo INSTALL_DIR=/srv/ZHS \
+  DEPLOY_USER=$(whoami) \
+  DOMAIN=your-domain.example.com \
+  BACKEND_HOST=127.0.0.1 \
+  BACKEND_PORT=8000 \
+  bash deploy/install.sh
+```
 
 ### Docker Compose 部署
 
@@ -298,6 +329,15 @@ cd /opt/ZHS/web-demo && npm run build
 
 # 检查后端接口
 curl http://127.0.0.1:8000/api/accounts
+```
+
+如果你更习惯统一命令入口，也可以直接用仓库根目录的 `Makefile`：
+
+```bash
+make check-backend
+make build-frontend
+make compose-up
+make compose-logs
 ```
 
 ## 开发说明
