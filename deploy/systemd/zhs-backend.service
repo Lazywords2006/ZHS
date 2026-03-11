@@ -1,0 +1,17 @@
+# Replace User/Group and WorkingDirectory paths before installing.
+[Unit]
+Description=ZHS FastAPI Backend
+After=network.target
+
+[Service]
+Type=simple
+User=zhs
+Group=zhs
+WorkingDirectory=/opt/ZHS/web-demo/backend
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/opt/ZHS/.venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

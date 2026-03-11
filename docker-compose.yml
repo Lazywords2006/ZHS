@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: web-demo/backend/Dockerfile
+    container_name: zhs-backend
+    restart: unless-stopped
+    volumes:
+      - ./web-demo/backend/runtime:/app/web-demo/backend/runtime
+      - ./logs:/app/logs
+    expose:
+      - "8000"
+
+  web:
+    build:
+      context: ./web-demo
+      dockerfile: Dockerfile
+      args:
+        VITE_USE_MOCK: "false"
+        VITE_API_BASE_URL: ""
+    container_name: zhs-web
+    depends_on:
+      - backend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+

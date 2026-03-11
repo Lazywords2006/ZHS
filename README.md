@@ -110,6 +110,42 @@ python main.py -c <course_id> -v <video_id>
 - `Vite build + Nginx` 作为前端静态资源服务
 - `systemd` 托管后端进程
 
+仓库内已附带这些部署文件：
+
+- `docker-compose.yml`
+- `web-demo/backend/Dockerfile`
+- `web-demo/Dockerfile`
+- `web-demo/nginx.conf`
+- `deploy/systemd/zhs-backend.service`
+- `deploy/nginx/zhs.conf`
+
+### Docker Compose 部署
+
+如果机器已经装好了 Docker 和 Docker Compose，可以直接使用：
+
+```bash
+cd /opt/ZHS
+mkdir -p logs web-demo/backend/runtime
+docker compose up -d --build
+```
+
+默认暴露：
+
+- 前端：`http://127.0.0.1:8080`
+- 后端：仅在 Compose 内部供 Nginx 反代，不直接对外暴露
+
+查看日志：
+
+```bash
+docker compose logs -f
+```
+
+停止：
+
+```bash
+docker compose down
+```
+
 ### 1. 安装系统依赖
 
 以 Ubuntu 24.04 为例：
@@ -159,6 +195,8 @@ npm run build
 
 ### 4. 创建后端 systemd 服务
 
+可直接复制仓库里的模板文件 `deploy/systemd/zhs-backend.service` 到系统目录，再按实际部署用户修改 `User`、`Group` 和路径。
+
 创建 `/etc/systemd/system/zhs-backend.service`：
 
 ```ini
@@ -189,6 +227,8 @@ sudo systemctl status zhs-backend.service
 ```
 
 ### 5. 配置 Nginx
+
+可直接复制仓库里的模板文件 `deploy/nginx/zhs.conf` 到 `/etc/nginx/sites-available/zhs.conf` 后再修改域名。
 
 创建 `/etc/nginx/sites-available/zhs.conf`：
 
