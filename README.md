@@ -117,6 +117,7 @@ python main.py -c <course_id> -v <video_id>
 - `web-demo/Dockerfile`
 - `web-demo/nginx.conf`
 - `deploy/install.sh`
+- `deploy/logrotate/zhs`
 - `deploy/systemd/zhs-backend.service`
 - `deploy/systemd/zhs-backend.env.example`
 - `deploy/nginx/zhs.conf`
@@ -141,6 +142,7 @@ sudo DOMAIN=your-domain.example.com DEPLOY_USER=$(whoami) bash deploy/install.sh
 - 生成 `/etc/zhs/zhs-backend.env`
 - 安装 `systemd` 服务
 - 写入并启用 Nginx 配置
+- 安装 `logrotate` 规则
 
 如果你希望用其他路径或端口，可以覆盖这些环境变量：
 
@@ -351,6 +353,7 @@ make compose-logs
 - 优先走 HTTPS，至少在公网环境不要长期裸露 HTTP
 - 通过 `curl http://127.0.0.1:8000/api/healthz` 和 `curl http://127.0.0.1/healthz` 做存活检查
 - 如果使用 Docker，建议接入外部反向代理或云负载均衡，而不是直接把 8080 暴露到公网
+- 使用仓库内的 `deploy/logrotate/zhs` 轮转 `logs/`，避免长期运行后日志无限增长
 
 ## 开发说明
 

@@ -35,7 +35,8 @@ apt-get install -y \
   nodejs \
   npm \
   nginx \
-  rsync
+  rsync \
+  logrotate
 
 mkdir -p "${INSTALL_DIR}"
 rsync -a \
@@ -103,6 +104,11 @@ sed \
   "${INSTALL_DIR}/deploy/nginx/zhs.conf" \
   > /etc/nginx/sites-available/zhs.conf
 
+sed \
+  -e "s|/opt/ZHS|${INSTALL_DIR}|g" \
+  "${INSTALL_DIR}/deploy/logrotate/zhs" \
+  > /etc/logrotate.d/zhs
+
 ln -sf /etc/nginx/sites-available/zhs.conf /etc/nginx/sites-enabled/zhs.conf
 rm -f /etc/nginx/sites-enabled/default
 
@@ -117,3 +123,4 @@ echo "Backend service: systemctl status zhs-backend.service"
 echo "Frontend root: ${INSTALL_DIR}/web-demo/dist"
 echo "Runtime data: ${INSTALL_DIR}/web-demo/backend/runtime"
 echo "Backend env file: /etc/zhs/zhs-backend.env"
+echo "Logrotate rule: /etc/logrotate.d/zhs"
