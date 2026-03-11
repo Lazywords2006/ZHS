@@ -113,8 +113,10 @@ python main.py -c <course_id> -v <video_id>
 仓库内已附带这些部署文件：
 
 - `docker-compose.yml`
+- `docker-compose.prebuilt.yml`
 - `web-demo/backend/Dockerfile`
 - `web-demo/Dockerfile`
+- `web-demo/Dockerfile.prebuilt`
 - `web-demo/nginx.conf`
 - `deploy/install.sh`
 - `deploy/logrotate/zhs`
@@ -163,6 +165,17 @@ sudo INSTALL_DIR=/srv/ZHS \
 cd /opt/ZHS
 mkdir -p logs web-demo/backend/runtime
 docker compose up -d --build
+```
+
+如果机器拉取 `node` 构建镜像较慢，但前端已经在本地执行过 `npm run build`，可以改用预构建前端镜像路径：
+
+```bash
+cd /opt/ZHS/web-demo
+npm install
+npm run build
+
+cd /opt/ZHS
+docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d --build
 ```
 
 默认暴露：

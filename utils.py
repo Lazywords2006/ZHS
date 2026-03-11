@@ -93,8 +93,14 @@ def wipeLine():
         width = 80
     print('\r' + ' ' * (width), end = '\r', flush=True)
 
+def getTerminalWidth(default: int = 80) -> int:
+    try:
+        return os.get_terminal_size().columns
+    except OSError:
+        return default
+
 def progressBar (iteration, total, prefix = '', suffix = '', decimals = 1,
-                      length = (os.get_terminal_size().columns-4), fill = '#'):
+                      length = None, fill = '#'):
     """
     ### Call in a loop to create terminal progress bar
     * `iteration`   - Required  : current iteration (Int)
@@ -105,6 +111,8 @@ def progressBar (iteration, total, prefix = '', suffix = '', decimals = 1,
     * `length`      - Optional  : character length of bar (Int)
     * `fill`        - Optional  : bar fill character (Str)
     """
+    if length is None:
+        length = getTerminalWidth() - 4
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     prefix = f"{prefix} |"
     suffix = f"| {percent}% {suffix}"
